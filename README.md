@@ -1,3 +1,3 @@
 # toolbox
 
-Some easy tools make go more easier
+Some easy tools make go easier
