@@ -11,8 +11,8 @@ func MergeMapsString[K comparable, V string](a, b map[K]V) map[K]V {
 
 	// Merge map b
 	for k, v := range b {
-		if existing, exists := result[k]; exists {
-			result[k] = existing + v
+		if val, exists := result[k]; exists {
+			result[k] = val + v
 		} else {
 			result[k] = v
 		}
@@ -32,8 +32,8 @@ func MergeMapsInt[K comparable, V int](a, b map[K]V) map[K]V {
 
 	// Merge map b
 	for k, v := range b {
-		if existing, exists := result[k]; exists {
-			result[k] = existing + v
+		if val, exists := result[k]; exists {
+			result[k] = val + v
 		} else {
 			result[k] = v
 		}
