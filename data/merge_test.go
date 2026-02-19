@@ -77,6 +77,108 @@ func TestMergeMapsString(t *testing.T) {
 	}
 }
 
+func TestMergeMapsStringDropMismatch(t *testing.T) {
+	// Test cases
+	var (
+		emptyMap   = map[int]string{}
+		singleMapA = map[int]string{1: "Hello"}
+		singleMapB = map[int]string{2: "World"}
+		overlapMap = map[int]string{1: "World", 2: "!"}
+	)
+
+	// Test case 1: Both maps empty
+	result1 := MergeMapsStringDropMismatch(emptyMap, emptyMap)
+	if len(result1) != 0 {
+		t.Error("empty + empty should result in empty map")
+	}
+
+	// Test case 2: First map empty, second map not empty
+	result2 := MergeMapsStringDropMismatch(emptyMap, singleMapB)
+	if len(result2) != 0 {
+		t.Error("empty + {2:World} should result in empty map (no common keys)")
+	}
+
+	// Test case 3: First map not empty, second map empty
+	result3 := MergeMapsStringDropMismatch(singleMapA, emptyMap)
+	if len(result3) != 0 {
+		t.Error("{1:Hello} + empty should result in empty map (no common keys)")
+	}
+
+	// Test case 4: No overlapping keys
+	result4 := MergeMapsStringDropMismatch(singleMapA, singleMapB)
+	if len(result4) != 0 {
+		t.Error("{1:Hello} + {2:World} should result in empty map (no common keys)")
+	}
+
+	// Test case 5: Partially overlapping keys
+	result5 := MergeMapsStringDropMismatch(singleMapA, overlapMap)
+	if len(result5) != 1 {
+		t.Error("{1:Hello} + {1:World, 2:!} should have 1 entry (only common key)")
+	}
+	if result5[1] != "HelloWorld" {
+		t.Error("Common key 1 should concatenate 'Hello' and 'World'")
+	}
+
+	// Test case 6: Multiple overlapping keys
+	mapA := map[string]string{"a": "foo", "b": "bar", "c": "baz"}
+	mapB := map[string]string{"b": "qux", "c": "quux", "d": "corge"}
+	result6 := MergeMapsStringDropMismatch(mapA, mapB)
+	expected6 := map[string]string{"b": "barqux", "c": "bazquux"}
+	if !maps.Equal(result6, expected6) {
+		t.Error("Should only include common keys b and c", result6)
+	}
+
+	// Test case 7: All keys overlap
+	fullOverlapA := map[string]string{"x": "hello", "y": "world"}
+	fullOverlapB := map[string]string{"x": " there", "y": "!"}
+	result7 := MergeMapsStringDropMismatch(fullOverlapA, fullOverlapB)
+	expected7 := map[string]string{"x": "hello there", "y": "world!"}
+	if !maps.Equal(result7, expected7) {
+		t.Error("All keys should be included when fully overlapping", result7)
+	}
+
+	// Test case 8: Test with different key types (float64)
+	mapFloatA := map[float64]string{1.5: "one", 2.0: "two", 3.0: "three"}
+	mapFloatB := map[float64]string{2.0: " point zero", 3.0: " point oh", 4.5: "four point five"}
+	result8 := MergeMapsStringDropMismatch(mapFloatA, mapFloatB)
+	expected8 := map[float64]string{2.0: "two point zero", 3.0: "three point oh"}
+	if !maps.Equal(result8, expected8) {
+		t.Error("Should only include common float64 keys 2.0 and 3.0", result8)
+	}
+
+	// Test case 9: One map is subset of another
+	subsetA := map[int]string{1: "a", 2: "b"}
+	subsetB := map[int]string{1: "x", 2: "y", 3: "z"}
+	result9 := MergeMapsStringDropMismatch(subsetA, subsetB)
+	expected9 := map[int]string{1: "ax", 2: "by"}
+	if !maps.Equal(result9, expected9) {
+		t.Error("Should include only common keys when one is subset", result9)
+	}
+
+	// Test case 10: Complex scenario with various overlaps
+	complexA := map[string]string{
+		"common1": "value1",
+		"common2": "value2",
+		"uniqueA": "onlyA",
+		"shared":  "shareA",
+	}
+	complexB := map[string]string{
+		"common1": "append1",
+		"common2": "append2",
+		"uniqueB": "onlyB",
+		"shared":  "shareB",
+	}
+	result10 := MergeMapsStringDropMismatch(complexA, complexB)
+	expected10 := map[string]string{
+		"common1": "value1append1",
+		"common2": "value2append2",
+		"shared":  "shareAshareB",
+	}
+	if !maps.Equal(result10, expected10) {
+		t.Error("Complex test failed - should only include common keys", result10)
+	}
+}
+
 func TestMergeMapsInt(t *testing.T) {
 	// Test cases
 	var (
