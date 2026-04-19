@@ -15,7 +15,7 @@ func TestMakeSliceNotNil(t *testing.T) {
 		t.Error("nil slice should become empty slice with length 0")
 	}
 
-	// Test case 2: already initialized empty slice should remain unchanged
+	// Test case 2: already initialised empty slice should remain unchanged
 	emptySlice := make([]string, 0)
 	result2 := MakeSliceNotNil(emptySlice)
 	if len(result2) != 0 {
