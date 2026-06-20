@@ -5,7 +5,7 @@ import (
 	"testing"
 )
 
-// TestCodeDefault verifies default behavior when Options has zero values.
+// TestCodeDefault verifies default behaviour when Options has zero values.
 func TestCodeDefault(t *testing.T) {
 	code, err := Code(Options{})
 	if err != nil {
