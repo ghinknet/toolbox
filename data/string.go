@@ -1,6 +1,9 @@
 package data
 
-import "strconv"
+import (
+	"strconv"
+	"strings"
+)
 
 // Atoi converted to type int
 func Atoi(s string) (int, error) {
@@ -16,4 +19,9 @@ func Atoi32(s string) (int32, error) {
 // Atoi64 converted to type int64
 func Atoi64(s string) (int64, error) {
 	return strconv.ParseInt(s, 10, 64)
+}
+
+// StrConcat provides an easy method to concat strings directly
+func StrConcat(strs ...string) string {
+	return strings.Join(strs, "")
 }

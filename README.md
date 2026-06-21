@@ -185,7 +185,7 @@ merged := data.MergeMapsInt(
 
 API:
 
-- String: `Atoi(s string) (int, error)`, `Atoi32(s string) (int32, error)`, `Atoi64(s string) (int64, error)`
+- String: `Atoi(s string) (int, error)`, `Atoi32(s string) (int32, error)`, `Atoi64(s string) (int64, error)`, `StrConcat(strs ...string) string`
 - Slice: `MakeSliceNotNil[T any, S ~[]T](slice S) S`
 - Map: `MapKeys`, `MapValues`, `MapKeysValues`
 - Merge: `MergeMapsString` (concatenates), `MergeMapsStringDropMismatch` (keeps shared keys only), `MergeMapsInt` (adds)
